@@ -1,2 +1,2 @@
-# Firstpro
-1st prog
+This is My First Repo
+Lets start the game now
