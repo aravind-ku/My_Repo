@@ -1,0 +1,80 @@
+provider "aws" {
+region = "ap-south-1"
+}
+
+resources "aws_vpc" "myvpc" {
+tags = {
+name = "terraform_vpc"
+}
+cidr_block = "11.0.0.0/16"
+instance_tenancy = "default"
+enable_dns_hostnames = "true"
+}
+
+resource "aws_subnet" "subnet1" {
+vpc_id = aws_vpc.myvpc.id
+tags = {
+name = subnet-1
+}
+vpc_id = aws_vpc.myvpc.id
+availability_zone = "ap-south-1a"
+cidr_block = "11.0.1.0/24"
+map_public_ip_on_launch = "true"
+}
+
+resource "aws_subnet" "subnet2" {
+vpc_id = aws_vpc.myvpc.id
+tags = {
+name = "subnet-2"
+}
+availability_zone = "ap-south-1b"
+cider_block = "11.0.2.0/24"
+}
+
+resource "aws_internet_gateway" "myigw" {
+tags = {
+name = "myigw"
+}
+vpc_id = "aws_vpv.myvpc.id"
+}
+
+resource "aws_route_table" "rt1" {
+tags = {
+name = "RT-1"
+}
+route {
+cidr_block = "0.0.0.0/0"
+gateway_id = "aws_internet_gateway.myigw.id"
+}
+vpc_id = "aws_vpc.myvpc.id"
+}
+resource "aws_route_table_association" "subnet-ass" {
+subnet_id = "aws_subnet.mysubnet1.id"
+route_table_id = "aws_route_table.myrt1.id"
+}
+
+resource "aws_nat_gateway" "mynat" {
+tags = {
+name = "mynat"
+}
+subnet_id = "aws_subnet.subnet2.id"
+allocation_id = aws_eip.nat_eip.id
+}
+resource "aws_eip" "nat_eip" {
+domain = "vpc"
+}
+
+resource "aws_route_table" "rt2" {
+tags = {
+name= "RT-2"
+}
+route {
+cidr_block = "0.0.0.0/0"
+nat_gateway_id = "aws_nat_gateway.mynat.id"
+}
+vpc_id = "aws_vpc.myvpc.id"
+}
+resource "aws_route_table_association" "subnet-ass2" {
+subnet_id = "aws_subnet.subnet2.id"
+route_table_id = "aws_route_table.rt2.id"
+}
