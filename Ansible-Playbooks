@@ -99,6 +99,19 @@ tasks:
     file: 
       path: flm.devops 
       state: touch
+#ansible-playbook aravind.yml
+
+#installing the tool using the direct command.
+---
+hosts: all
+connection: ssh
+
+tasks:
+  - name: installing the java11.
+    command: amazon-linux-extras install javajdk11 -y
+#ansible-playbook aravind.yml
+
+
 
 
 
