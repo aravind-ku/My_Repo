@@ -148,7 +148,173 @@ users: name={{iteams}} state=absent
       when: ansible_OS_family == "Ubuntu"
 #ansible-playbook aravind.yml
 
+#Handlers
+vim handlers.yml
+---
+hosts: all
+connection: ssh
+tasks:   
+  - name: install webserver
+    action: yum name=htppd state=present
+    notify: restart htppd
+handlers:
+  - name: restart httpd
+service: name=httpd state=started
+#ansible-playbook handlers.yml
 
+vim handlers.yml
+---
+hosts: all
+connection: ssh
+tasks:
+  - name: install webserver.
+    action: yum name=httpd state=present
+  - name: start webserver.
+    server: name=httpd state=started
+  - name: install git
+    yum: name=git state=present
+  - name: installing maven.
+    tags: abc
+    yum: name=maven state=present
+  - name: install tree
+    yum: name=tree state=present
+#ansible-playbook handlers.yml --skip-tags="abc"
+#ansible-playbook handlers.yml --tags="abc"
+
+#if you want to encypt the data in the playbook using the vault.
+
+#ansible-vault encrypt aravind.yml
+set password
+now, cat aravind.yml
+playbook got encrypted.
+#To decrypt the play book
+ansible-vault decrypt handlers.yml
+vault password: enter the password here to decrypt the playbook.
+#To create the new key.
+ansible-vault rekey handlers.yml
+O/P: Rekey Successfull
+
+
+##Commands to install the Software with ansible with command directly.
+To install the java11
+ansible test -m yum -a "pkg=java-1.8.0openjdk state=present"
+
+to install the webserver.
+ansible test -m command -a "pkg=httpd state=stoped"
+
+to see the status of the webserver.
+ansible test -m command -a "systemctl status httpd"
+
+to satrt the httpd.
+ansible test -m command -a "systemctl start htppd"
+
+to copy the file from the host to the 
+ansible test -m copy -a "src=flm.yml dest=/root"
+
+#ansible all -m ping
+
+
+------Roles-----------
+cd roles/
+ll
+vim main.yml
+---
+hosts: dev 
+connection: ssh
+roles:
+  - nikitha
+  - chaitanya
+  - eswar
+
+mkdir nikitha chaitanya eswar
+cd nikitha
+vim main.yml
+--- 
+hosts: dev
+connection: ssh
+tasks:
+  - name: install httpd server.
+    yum: name=httpd state=present
+  - name: starting the server
+    yum: name=httpd state=started
+cd..
+cd /chaitanys
+vim main.yml
+---
+hosts: dev
+connection: ssh
+  - name: creating the file.
+    file:
+      path: "/var/www/html/index.html"
+      state: touch
+
+cd ..
+cd /eswar
+---
+hosts: dev
+connection: ssh
+  - name: insertinf the content in the file.
+    copy:
+    dest: "/var/www/html//index.html"
+    content: | 
+<h1> Thi sthe Ansible Last Class.</h1>
+NOTE: Install the tree in the servere to unberstand the folder structure.
+yum install tree -y
+tree
+
+#ansible-playbook main.yml
+
+
+vim github.yml
+---
+hosts: all
+connection: ssh
+tasks:
+  - name: install the git.
+    yum: name=git state=present
+  - name: getting the code from git.
+    git:
+    repo: "URL_LINK"
+    dest: "mustafa"
+#ansible-playbook github.yml
+-----------------------------
+- name: getting code from github
+  git:
+  repo: "URL_LINK"
+  dest: "flm"
+  version: "master"
+
+#ansible-playbook github.yml
+cd flm/
+output: pom.xml,src
+
+vim pip.yml
+---
+hosts: all
+connection: ssh
+tasks:
+  - name: install pip
+    yum: name=python-pip state=present
+  - name: install pip-boto3
+    pip: name=numpy (or) boto3 state=present
+
+#ansible-playbook pip.yml
+
+-----------------------------------
+Debugging msg:
+
+vim debug.yml
+hosts: all
+connection: ssh
+tasks:
+  - debug: 
+      msg: "my slave servere is{{ansible_os_family}}"
+#ansible-playbook debug.yml
+output: my slave srever os is REDHAT
+
+ msg: "my slave servere is{{ansible_kernel}}"
+
+ msg: "my slave servere is{{ansible_architecture}}"
 
 
 
