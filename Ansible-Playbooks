@@ -123,7 +123,7 @@ tasks:
 --------------------------------
 tasks: 
   - name: creating users.
-    users: name={{iteam}} state=present
+    users: name={{item}} state=present
     with_items:
       - renuka
       - rohith
@@ -142,10 +142,10 @@ users: name={{iteams}} state=absent
   tasks:
     - name: install httpd on Redhat server.
       yum: name=httpd state=present
-      when: ansible_OS_family == "RedHat"
+      when: ansible_os_family == "RedHat"
     - name: install apache on Ubuntu server.
       apt: name=apache2 state=present
-      when: ansible_OS_family == "Ubuntu"
+      when: ansible_os_family == "Ubuntu"
 #ansible-playbook aravind.yml
 
 #Handlers
@@ -187,6 +187,10 @@ tasks:
 set password
 now, cat aravind.yml
 playbook got encrypted.
+
+#To view the data of playbook
+#ansible-vault view handler.yml
+
 #To decrypt the play book
 ansible-vault decrypt handlers.yml
 vault password: enter the password here to decrypt the playbook.
@@ -212,6 +216,9 @@ to copy the file from the host to the
 ansible test -m copy -a "src=flm.yml dest=/root"
 
 #ansible all -m ping
+#ansible dev -m ping
+#ansible Pvt_IP -m ping ---> for single server
+#ansible dev[0:2] -m ping ----> 1st 3 srever of the dev enviornment
 
 
 ------Roles-----------
@@ -227,32 +234,22 @@ roles:
   - eswar
 
 mkdir nikitha chaitanya eswar
-cd nikitha
+cd /nikitha/tasks/
 vim main.yml
---- 
-hosts: dev
-connection: ssh
-tasks:
   - name: install httpd server.
     yum: name=httpd state=present
   - name: starting the server
     yum: name=httpd state=started
 cd..
-cd /chaitanys
+cd /chaitanys/tasks/
 vim main.yml
----
-hosts: dev
-connection: ssh
   - name: creating the file.
     file:
       path: "/var/www/html/index.html"
       state: touch
 
 cd ..
-cd /eswar
----
-hosts: dev
-connection: ssh
+cd /eswar/tasks/
   - name: insertinf the content in the file.
     copy:
     dest: "/var/www/html//index.html"
