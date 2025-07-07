@@ -271,15 +271,15 @@ tasks:
     yum: name=git state=present
   - name: getting the code from git.
     git:
-    repo: "URL_LINK"
-    dest: "mustafa"
+      repo: "URL_LINK"
+      dest: "mustafa"
 #ansible-playbook github.yml
 -----------------------------
 - name: getting code from github
   git:
-  repo: "URL_LINK"
-  dest: "flm"
-  version: "master"
+    repo: "URL_LINK"
+    dest: "flm"
+    version: "master"
 
 #ansible-playbook github.yml
 cd flm/
@@ -293,7 +293,7 @@ tasks:
   - name: install pip
     yum: name=python-pip state=present
   - name: install pip-boto3
-    pip: name=numpy (or) boto3 state=present
+    pip: name=numpy (or) boto3
 
 #ansible-playbook pip.yml
 
