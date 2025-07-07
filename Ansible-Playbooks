@@ -1,0 +1,109 @@
+---
+Host: dev
+connection: ssh
+
+tasks: 
+  - name: i am installing the git.
+    yum: name=git state=present
+
+#Playbook with variable section
+
+---
+Host: test
+connection: ssh
+
+vars:
+  abc: git
+  xyz: java-1.8.0-openjdk
+  cd: maven
+  ef: tree
+tasks:
+  - name: installing git 
+    yum: name={{abc}} state=present
+  - name: installing java
+    yum: name={{}xyz} state=present
+  - name: installinf the maven
+    yum: name={{cd}} sate=present
+  - name: install the tree
+    yum: name={{ef}} state=present
+
+#ansible-playbook Aravind.yml
+#we can also declare the variable section in the commad also as show in below command.
+#ansible-playbook aravind.yml --extras-vars "abc=git" "xyz=java-1.8.0-openjdk"
+
+#install the we server
+#vim webserver.yml
+---
+host: dev
+connection: ssh
+
+tasks:
+  - name: install the apache2
+    yum: name: httpd state:present
+  - name: starting the server.
+    service: name=httpd state=started
+
+#ansible-playbook webserver.yml
+
+#creating the files and folders
+---
+host: all
+connection: ssh
+
+tasks:
+  - name: create the files and the folders.
+    file:
+      path: "flm.devops"
+      state: touch
+    file:
+      path: "rohit"
+      state: directory
+    file:
+      path: "rohit/amazon"
+      state: touch 
+#here creating the file inside the folder
+#ansible-playbook aravind.yml
+
+#to add the content inside the file 
+---
+host: all
+connection: ssh
+
+tasks:
+  - name: inserting the content inside teh file.
+    copy:
+    dest: "rohit/amazon"
+    content: |
+     amazon provides AWS cloud it offers all services
+#ansible=playbook aravind.yml
+
+#moving the file from the host or master server to the slave server.
+---
+host: dev
+connection: ssh
+
+tasks:
+  - name: movin the file from the master server to slave server.
+    copy:
+      src: "mustafa.yml"
+      dest: "/root"
+#ansible-playbook mustafa.yml
+
+#the below showing the second way to write the play book
+tasks:
+  - name: installing the git in 1st way.
+    file: path=git state=present
+-----------------------------------------
+tasks:
+  - name: installing the git in 2nd way.
+    file: 
+      path: flm.devops 
+      state: touch
+
+
+
+
+
+
+
+
